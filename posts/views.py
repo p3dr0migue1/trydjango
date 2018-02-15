@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 
 def post_create(request):
-    return HttpResponse('<h1>Create</h1>')
+    return render(request, 'index.html', {})
 
 
 def post_retrieve(request):
