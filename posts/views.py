@@ -8,8 +8,8 @@ def post_create(request):
     return render(request, 'index.html', {})
 
 
-def post_retrieve(request):
-    instance = get_object_or_404(Post, id=3)
+def post_detail(request, id):
+    instance = get_object_or_404(Post, id=id)
     context = {'title': instance.title, 'instance': instance}
     return render(request, 'post_retrieve.html', context)
 
