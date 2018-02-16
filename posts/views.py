@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import PostForm
@@ -14,8 +14,6 @@ def post_create(request):
         instance.save()
         messages.success(request, 'Successfully Created')
         return HttpResponseRedirect(instance.get_absolute_url())
-    else:
-        messages.error(request, 'Not Successfully Created')
     context = {
         'form': form,
     }
@@ -31,11 +29,7 @@ def post_detail(request, id):
 def post_list(request):
     queryset = Post.objects.all()
     context = {'title': 'List', 'object_list': queryset}
-    # if request.user.is_authenticated():
-    #     context = {'title': 'My user list'}
-    # else:
-    #     context = {'title': 'List'}
-    return render(request, 'index.html', context)
+    return render(request, 'post_list.html', context)
 
 
 def post_update(request, id=None):
