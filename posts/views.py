@@ -23,6 +23,7 @@ def post_create(request):
 
 def post_detail(request, id):
     instance = get_object_or_404(Post, id=id)
+    import ipdb; ipdb.set_trace()
     context = {'title': instance.title, 'instance': instance}
     return render(request, 'post_detail.html', context)
 
