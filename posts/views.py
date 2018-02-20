@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -7,7 +8,7 @@ from .models import Post
 
 
 def post_create(request):
-    form = PostForm(request.POST or None)
+    form = PostForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
         instance = form.save(commit=False)
@@ -27,14 +28,26 @@ def post_detail(request, id):
 
 
 def post_list(request):
-    queryset = Post.objects.all()
+    queryset_list = Post.objects.all()
+    paginator = Paginator(queryset_list, 3)
+
+    page = request.GET.get('page')
+    try:
+        queryset = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        queryset = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        queryset = paginator.page(paginator.num_pages)
+
     context = {'title': 'List', 'object_list': queryset}
     return render(request, 'post_list.html', context)
 
 
 def post_update(request, id=None):
     instance = get_object_or_404(Post, id=id)
-    form = PostForm(request.POST or None, instance=instance)
+    form = PostForm(request.POST or None, request.FILES or None, instance=instance)
 
     if form.is_valid():
         instance = form.save(commit=False)
