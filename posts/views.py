@@ -23,7 +23,10 @@ def post_create(request):
 
 def post_detail(request, slug):
     instance = get_object_or_404(Post, slug=slug)
-    context = {'title': instance.title, 'instance': instance}
+    context = {
+        'title': instance.title,
+        'instance': instance,
+    }
     return render(request, 'post_detail.html', context)
 
 
