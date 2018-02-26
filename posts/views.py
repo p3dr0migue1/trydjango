@@ -15,6 +15,7 @@ def post_create(request):
 
     if form.is_valid():
         instance = form.save(commit=False)
+        instance.user = request.user
         instance.save()
         messages.success(request, 'Successfully Created')
         return HttpResponseRedirect(instance.get_absolute_url())
@@ -75,7 +76,7 @@ def post_update(request, slug=None):
 def post_delete(request, slug=None):
     if not request.user.is_staff or not request.user.is_superuser:
         return Http404
-        
+
     instance = get_object_or_404(Post, slug=slug)
     instance.delete()
     messages.success(request, 'Post Deleted Successfully', extra_tags='some-tag')

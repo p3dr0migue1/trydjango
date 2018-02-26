@@ -11,6 +11,10 @@
         <h1>{{ title }} <small>{{ instance.timestamp }}</small></h1>
         {{ instance.content|linebreaks }}<br/>
 
+        {% if instance.user.get_full_name %}
+            <p>Author: {{ instance.user.get_full_name }}</p>
+        {% endif %}
+
         {{ instance.content|truncatechars:80|urlify }}
 
         <a href="https://twitter.com/home?status={{ instance.content|truncatechars:80|urlify }}">
