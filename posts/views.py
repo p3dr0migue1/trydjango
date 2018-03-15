@@ -1,13 +1,17 @@
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 
 from .forms import PostForm
 from .models import Post
 
 
 def post_create(request):
+    if not request.user.is_staff or not request.user.is_superuser:
+        return Http404
+
     form = PostForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
@@ -23,13 +27,22 @@ def post_create(request):
 
 def post_detail(request, id):
     instance = get_object_or_404(Post, id=id)
-    import ipdb; ipdb.set_trace()
+
+    if instance.draft or instance.publish > timezone.now().date():
+        if not request.user.is_staff or not request.user.is_superuser:
+            raise Http404
+
     context = {'title': instance.title, 'instance': instance}
     return render(request, 'post_detail.html', context)
 
 
 def post_list(request):
-    queryset_list = Post.objects.all()
+    if request.user.is_staff or request.user.is_superuser:
+        queryset_list = Post.objects.all()
+    else:
+        queryset_list = Post.objects.active()
+
+    today = timezone.now().date()
     paginator = Paginator(queryset_list, 3)
 
     page = request.GET.get('page')
@@ -42,7 +55,11 @@ def post_list(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         queryset = paginator.page(paginator.num_pages)
 
-    context = {'title': 'List', 'object_list': queryset}
+    context = {
+        'title': 'List',
+        'object_list': queryset,
+        'today': today,
+    }
     return render(request, 'post_list.html', context)
 
 
