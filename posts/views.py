@@ -26,8 +26,8 @@ def post_create(request):
     return render(request, 'post_form.html', context)
 
 
-def post_detail(request, id):
-    instance = get_object_or_404(Post, id=id)
+def post_detail(request, slug):
+    instance = get_object_or_404(Post, slug=slug)
 
     if instance.draft or instance.publish > timezone.now().date():
         if not request.user.is_staff or not request.user.is_superuser:
