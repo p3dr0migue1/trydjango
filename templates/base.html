@@ -6,9 +6,9 @@
     <title>{% block head_title %}Try Django 1.9{% endblock head_title %}</title>
     <!-- bootstrap css -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
     <!-- tryddjango css -->
     <link rel='stylesheet' href='{% static "css/base.css" %}'>
+    {% block head_extra %}{% endblock head_extra %}
 </head>
 <body>
     <div id="fb-root"></div>
@@ -26,7 +26,33 @@
             <h1>{{ title }} is working!</h1>
         {% endblock content %}
     </div>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <!-- jquery 1.12.4 minified from code.jquery.com -->
+  <script
+    src="https://code.jquery.com/jquery-1.12.4.min.js"
+    integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+    crossorigin="anonymous">
+  </script>
+  <!-- Latest compiled and minified bootstrap -->
+  <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+    integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous">
+  </script>
+  <!-- low-level markdown compiler that allows frequent parsing of
+    large chunks of markdown without caching or blocking for long periods of time.
+    from https://cdnjs.com/libraries/marked -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js'></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".content-markdown").each(function(){
+          var content = $(this).text()
+          console.log(content)
+          var markedContent = marked(content)
+          $(this).html(markedContent)
+      })
+      $(".content-markdown img").each(function(){
+          $(this).addClass("img-responsive")
+      })
+    })
+  </script>
 </body>
 </html>

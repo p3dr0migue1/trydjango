@@ -11,7 +11,7 @@ from .models import Post
 
 def post_create(request):
     if not request.user.is_staff or not request.user.is_superuser:
-        return Http404
+        raise Http404
 
     form = PostForm(request.POST or None, request.FILES or None)
 
@@ -78,7 +78,7 @@ def post_list(request):
 
 def post_update(request, slug=None):
     if not request.user.is_staff or not request.user.is_superuser:
-        return Http404
+        raise Http404
 
     instance = get_object_or_404(Post, slug=slug)
     form = PostForm(request.POST or None, request.FILES or None, instance=instance)
@@ -99,7 +99,7 @@ def post_update(request, slug=None):
 
 def post_delete(request, slug=None):
     if not request.user.is_staff or not request.user.is_superuser:
-        return Http404
+        raise Http404
 
     instance = get_object_or_404(Post, slug=slug)
     instance.delete()
