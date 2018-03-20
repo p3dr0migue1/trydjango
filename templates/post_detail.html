@@ -17,6 +17,13 @@
         {% endif %}
 
         <p class='lead'>Comments</p>
+        <form method="POST" action=".">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ comment_form }}
+            </div>
+            <input type="submit" class="btn btn-default" value="Post comment">
+        </form>
         {% for comment in comments %}
             <blockquote>
                 <p>{{ comment.content }}</p>
