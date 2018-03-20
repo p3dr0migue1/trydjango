@@ -16,14 +16,13 @@
             <p>Author: {{ instance.user.get_full_name }}</p>
         {% endif %}
 
-        <div>
-            <p class='lead'>Comments</p>
-            {% for comment in comments %}
-                {{ comment.content }}
-                <br>
-                via {{ comment.user }} | {{ comment.timestamp|timesince }} ago
-            {% endfor %}
-        </div>
-
+        <p class='lead'>Comments</p>
+        {% for comment in comments %}
+            <blockquote>
+                <p>{{ comment.content }}</p>
+                <footer>via {{ comment.user }} | {{ comment.timestamp|timesince }} ago</footer>
+            </blockquote>
+        {% endfor %}
+        <hr>
     </div>
 {% endblock content %}
