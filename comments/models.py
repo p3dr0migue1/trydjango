@@ -40,6 +40,7 @@ class Comment(models.Model):
     class Meta:
         ordering = ['-timestamp']
 
+    # replies
     def children(self):
         return Comment.objects.filter(parent=self)
 
