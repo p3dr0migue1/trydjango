@@ -7,6 +7,20 @@ from .forms import CommentForm
 from .models import Comment
 
 
+def comment_delete(request, id):
+    comment = get_object_or_404(Comment, id=id)
+    
+    if request.method == 'POST':
+        parent_obj_url = comment.content_object.get_absolute_url()
+        comment.delete()
+        messages.success(request, "Comment has been successfully deleted.")
+        return HttpResponseRedirect(parent_obj_url)
+
+    context = {
+       'object': comment 
+    }
+    return render(request, 'comment_delete.html', context)
+
 def comment_thread(request, id):
     comment = get_object_or_404(Comment, id=id)
     content_object = comment.content_object  # Post that the comment is on
