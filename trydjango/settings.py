@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'markdown_deux',
     'pagedown',
     'comments',
+    'accounts',
     'posts',
 ]
 
