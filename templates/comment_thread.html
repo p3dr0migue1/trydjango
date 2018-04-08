@@ -17,14 +17,18 @@
                 </blockquote>
             {% endfor %}
 
-            <form method="POST" action=".">
-                {% csrf_token %}
-                <div class="form-group">
-                    {{ comment_form }}
-                </div>
-                <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                <input type="submit" class="btn btn-default" value="Reply">
-            </form>
+            {% if request.user.is_authenticated %}
+                <form method="POST" action=".">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ comment_form }}
+                    </div>
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                    <input type="submit" class="btn btn-default" value="Reply">
+                </form>
+            {% else %}
+                <p>You must login to comment.</p>
+            {% endif %}
         </div>
         <hr>
     </div>

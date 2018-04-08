@@ -3,6 +3,10 @@
 
 {% block head_title %}{{ instance.title }} | {{ block.super }}{% endblock head_title %}
 
+{% block post_link %}
+    <li><a href="{{ instance.get_absolute_url }}">{{ instance.title }}</a></li>        
+{% endblock post_link %}
+
 {% block content %}
     <div class='col-sm-12'>
         {% if instance.image %}
@@ -17,13 +21,17 @@
         {% endif %}
 
         <p class='lead'>Comments</p>
-        <form method="POST" action=".">
-            {% csrf_token %}
-            <div class="form-group">
-                {{ comment_form }}
-            </div>
-            <input type="submit" class="btn btn-default" value="Post comment">
-        </form>
+        {% if request.user.is_authenticated %}
+            <form method="POST" action=".">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ comment_form }}
+                </div>
+                <input type="submit" class="btn btn-default" value="Post comment">
+            </form>
+        {% else %}
+            <p>You must login to comment.</p>
+        {% endif %}
         {% for comment in comments %}
             <blockquote>
                 <p>{{ comment.content }}</p>
@@ -37,14 +45,18 @@
                         </blockquote>
                     {% endfor %}
 
-                    <form method="POST" action=".">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            {{ comment_form }}
-                        </div>
-                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                        <input type="submit" class="btn btn-default" value="Reply">
-                    </form>
+                    {% if request.user.is_authenticated %}
+                        <form method="POST" action=".">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ comment_form }}
+                            </div>
+                            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                            <input type="submit" class="btn btn-default" value="Reply">
+                        </form>
+                    {% else %}
+                        <p>You must login to comment.</p>
+                    {% endif %}
                 </div>
             </blockquote>
             <hr>
