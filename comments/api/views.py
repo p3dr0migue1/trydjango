@@ -22,16 +22,19 @@ from ..models import Comment
 from .serializers import (
     CommentSerializer,
     CommentDetailSerializer,
+    create_comment_serializer,
 )
 
 
-# class PostCreateAPIView(CreateAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostCreateUpdateSerializer
-#     permission_classes = [IsAuthenticated]
+class CommentCreateAPIView(CreateAPIView):
+    queryset = Comment.objects.all()
+    permission_classes = [IsAuthenticated]
 
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)
+    def get_serializer_class(self):
+        model_type = self.request.GET.get("type")
+        slug = self.request.GET.get("slug")
+        parent_id = self.request.GET.get("parent_id") 
+        return create_comment_serializer(model_type, slug, parent_id, user=self.request.user)
 
 
 class CommentListAPIView(ListAPIView):

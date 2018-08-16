@@ -73,7 +73,9 @@ def comment_thread(request, id):
             content=content_data,
             parent=parent_obj,
         )
-        return HttpResponseRedirect(new_comment.content_object.get_absolute_url())
+        # instead of redirecting to the post page, we want to redirect
+        # the user to the thread page
+        return HttpResponseRedirect(parent_obj.get_absolute_url())
     
     context = {
         'comment': comment,
