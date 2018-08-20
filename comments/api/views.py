@@ -24,9 +24,8 @@ from posts.api.pagination import PostLimitOffsetPagination, PostPageNumberPagina
 
 from ..models import Comment
 from .serializers import (
-    CommentSerializer,
+    CommentListSerializer,
     CommentDetailSerializer,
-    CommentEditSerializer,
     create_comment_serializer,
 )
 
@@ -43,7 +42,7 @@ class CommentCreateAPIView(CreateAPIView):
 
 
 class CommentListAPIView(ListAPIView):
-    serializer_class = CommentSerializer
+    serializer_class = CommentListSerializer
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['content', 'user__first_name']
     pagination_class = PostPageNumberPagination  # PageNumberPagination
@@ -78,15 +77,11 @@ class CommentListAPIView(ListAPIView):
 #     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
-class CommentDetailAPIView(RetrieveAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentDetailSerializer
-
-
-class CommentEditAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
+class CommentDetailAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
     queryset = Comment.objects.filter(id__gte=0)
-    serializer_class = CommentEditSerializer
-
+    serializer_class = CommentDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    
     def put(self, *args, **kwargs):
         return update(self, *args, **kwargs)
 
