@@ -10,6 +10,10 @@ from rest_framework.generics import (
     CreateAPIView,
     RetrieveUpdateAPIView,
 )
+from rest_framework.mixins import (
+    DestroyModelMixin,
+    UpdateModelMixin,
+)
 from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
@@ -22,6 +26,7 @@ from ..models import Comment
 from .serializers import (
     CommentSerializer,
     CommentDetailSerializer,
+    CommentEditSerializer,
     create_comment_serializer,
 )
 
@@ -76,3 +81,15 @@ class CommentListAPIView(ListAPIView):
 class CommentDetailAPIView(RetrieveAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentDetailSerializer
+
+
+class CommentEditAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
+    queryset = Comment.objects.filter(id__gte=0)
+    serializer_class = CommentEditSerializer
+
+    def put(self, *args, **kwargs):
+        return update(self, *args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        return destroy(self, *args, **kwargs)
+
