@@ -48,7 +48,7 @@ class CommentListAPIView(ListAPIView):
     pagination_class = PostPageNumberPagination  # PageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
-        queryset_list = Comment.objects.all()
+        queryset_list = Comment.objects.filter(id__gte=0)
         query = self.request.GET.get("q")
 
         if query:
@@ -81,7 +81,7 @@ class CommentDetailAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView)
     queryset = Comment.objects.filter(id__gte=0)
     serializer_class = CommentDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-    
+
     def put(self, *args, **kwargs):
         return update(self, *args, **kwargs)
 
