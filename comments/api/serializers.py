@@ -7,6 +7,7 @@ from rest_framework.serializers import (
     ValidationError,
 )
 
+from accounts.api.serializers import UserDetailSerializer
 from ..models import Comment
 
 
@@ -95,17 +96,20 @@ class CommentListSerializer(ModelSerializer):
 
 
 class CommentChildSerializer(ModelSerializer):
+    user = UserDetailSerializer(read_only=True)
 
     class Meta:
         model = Comment
         fields = [
             'id',
+            'user',
             'content',
             'timestamp',
         ]
 
 
 class CommentDetailSerializer(ModelSerializer):
+    user = UserDetailSerializer(read_only=True)
     replies = SerializerMethodField()
     reply_count = SerializerMethodField()
     content_object_url = SerializerMethodField()
@@ -114,6 +118,7 @@ class CommentDetailSerializer(ModelSerializer):
         model = Comment
         fields = [
             'id',
+            'user',
             'content',
             'replies',
             'reply_count',

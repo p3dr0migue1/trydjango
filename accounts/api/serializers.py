@@ -65,6 +65,17 @@ class UserCreateSerializer(ModelSerializer):
         return validated_data
 
 
+class UserDetailSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+        ]
+
+
 class UserLoginSerializer(ModelSerializer):
     # make email field required
     email = EmailField(label="Email Address", required=False, allow_blank=True)
