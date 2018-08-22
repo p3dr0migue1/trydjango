@@ -11,8 +11,7 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView,
 )
 from rest_framework.permissions import (
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
+    AllowAny,
 )
 
 from ..models import Post
@@ -28,7 +27,7 @@ from .serializers import (
 class PostCreateAPIView(CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateUpdateSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -39,6 +38,7 @@ class PostListAPIView(ListAPIView):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'content', 'user__first_name']
     pagination_class = PostPageNumberPagination  # PageNumberPagination
+    permission_classes = [AllowAny]
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = Post.objects.all()
@@ -55,23 +55,24 @@ class PostListAPIView(ListAPIView):
 
 
 class PostUpdateAPIView(RetrieveUpdateAPIView):
+    lookup_field = 'slug'
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostCreateUpdateSerializer
-    lookup_field = 'slug'
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
 
 
 class PostDeleteAPIView(DestroyAPIView):
+    lookup_field = 'slug'
+    permission_classes = [IsOwnerOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
-    lookup_field = 'slug'
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 
 class PostDetailAPIView(RetrieveAPIView):
+    lookup_field = 'slug'
+    permission_classes = [AllowAny]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
-    lookup_field = 'slug'
